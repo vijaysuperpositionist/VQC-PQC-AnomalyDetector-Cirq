@@ -1,74 +1,73 @@
-# VQC-PQC-AnomalyDetector
-vqclassifier-postquantum-symmetry  quantum-anomaly-detection-pqc  quantum-symmetry-classifier  pqc-vqc-graphanomaly
-### 1. `vqc_input_anomaly_analysis.ipynb`
-*Input Encoding & Raw Anomaly Testing*
+VQC-PQC-AnomalyDetector-Cirq
+Symmetry-aware anomaly detection over abstracted post-quantum cryptographic (PQC) protocol features, using Variational Quantum Circuits implemented in Cirq.
 
-- Simulates toy PQC traffic features (e.g., `[π/4, 3π/4]`)
-- Encodes features via `RY` gates
-- Applies a simple entangling + variational circuit
-- Measures output bitstring probabilities over 100 shots
-- Compares baseline input vs. perturbed input
-- 🔍 Outcome: Shows clear probability distribution shifts indicating broken symmetry
+Topics: variational quantum classifiers · post-quantum symmetry · quantum anomaly detection · PQC graph anomalies
 
----
+Scope note. Exploratory research at 2-qubit scale on toy feature vectors. All results are from simulators; no hardware execution is claimed.
 
-### 2. `vqc_classifier_training.ipynb`
- *Brute-Force VQC Training via Grid Search*
 
-- Trains the same circuit using brute-force parameter sweep over `θ₀` and `θ₁`
-- Uses a majority vote classification scheme
-- Compares predicted class (`0=Normal`, `1=Anomaly`) with true labels
--  Outcome: Achieves 100% accuracy *on training data*, but misclassifies anomaly input in some edge cases due to limited parameter resolution
+Notebooks
+1. vqc_input_anomaly_analysis.ipynb — input encoding and raw anomaly testing
+Simulates toy PQC traffic features (e.g. [π/4, 3π/4])
+Encodes features via RY rotations, one qubit per feature dimension
+Applies an entangling layer followed by a variational block
+Measures output bitstring probabilities over 100 shots
+Compares a baseline input against a perturbed input
 
----
+Outcome: clear shifts in the probability distribution under perturbation, consistent with broken symmetry in the encoded state.
+2. vqc_classifier_training.ipynb — brute-force training via grid search
+Trains the circuit by parameter sweep over θ₀ and θ₁
+Classifies by majority vote on measurement outcomes (0 = normal, 1 = anomaly)
 
-### 3. `vqc_classifier_training_with_gradients.ipynb`
- *Gradient-Based Training using Parameter Shift Rule*
+Outcome: fits the training data exactly, but misclassifies anomalous inputs in edge cases — the grid resolution is too coarse to place a reliable decision boundary. The zero-loss figure describes fit on training data only and should not be read as generalisation.
+3. vqc_classifier_training_with_gradients.ipynb — parameter-shift training
+Manual parameter-shift gradient estimation
+Minimises squared classification loss
+Reports prediction confidence as P(measure 1), plotted as a confidence bar chart
 
-- Uses smooth parameter updates based on expectation-value shifts
-- Implements manual parameter-shift gradient estimation
-- Trains model to minimize squared classification loss
-- Evaluates prediction confidence as probability of measuring `1`
-- Plots bar graph of predicted class confidence
--  Outcome: Accurately detects anomaly with stronger generalization than brute-force; confidence plot shows clearer decision boundary
+Outcome: correctly identifies the anomalous input with better generalisation than grid search. The confidence margin is modest (roughly 0.58 vs 0.42), which is enough to separate the two classes on this toy set but is not a strong decision boundary.
 
----
 
-##  Key Takeaways
+Key takeaways
+Variational circuits are sensitive to symmetry violations in encoded features
+Gradient-based training outperforms brute-force search on this task, and the proposed reason is finer loss resolution near the boundary
+Structural shifts in feature space are detectable even at 2 qubits
 
-- Variational quantum circuits are **sensitive to symmetry violations** in encoded data
-- **Gradient-based training outperforms brute-force search** in anomaly detection reliability
-- Even with just **2 qubits**, the model captures structural shifts in feature space
 
----
+Limitations
+Toy feature vectors, not captured PQC traffic
+2-qubit circuits; conclusions may not survive scaling
+Small margins on the gradient-trained model
+No noise model applied; no hardware runs
 
-##  Future Work
 
-- Extend input encoding to **graph-based PQC traffic flows**
-- Scale to **3–4 qubit models** for richer feature input
-- Add **real PQC noise simulation** or integrate `liboqs`/Kyber traces
-- Explore integration with **PennyLane** for hybrid classical–quantum pipelines
+Future work
+Extend encoding to graph-based PQC traffic flows
+Scale to 3–4 qubit models for richer feature input
+Add PQC noise simulation or integrate liboqs / ML-KEM traces
+Explore hybrid classical–quantum pipelines in PennyLane
 
----
 
-##  Citation
+Citation
+@misc{somaraju_vqc_pqc_anomaly_2025,
 
-If you use this repo for academic or research work, please cite it as:
-@project{vqc_pqc_anomaly_2025,
-title={Quantum Symmetry-Aware Anomaly Detection using Variational Quantum Circuits},
-author={Vijay the Navigator},
-year={2025},
-note={https://github.com/vijaysuperpositionist/VQC-PQC-AnomalyDetector}
+  title  = {Quantum Symmetry-Aware Anomaly Detection in Post-Quantum Cryptographic
+
+            Protocols Using Variational Quantum Circuits},
+
+  author = {Somaraju, Vijay Krishna},
+
+  year   = {2025},
+
+  note   = {Unpublished manuscript},
+
+  url    = {https://github.com/vijaysuperpositionist/VQC-PQC-AnomalyDetector-Cirq}
+
 }
-##  Built With
+Built with
+Cirq
+NumPy
+SymPy
+License
+MIT License © 2025 Vijay Krishna Somaraju. Use, fork, remix freely.
 
-- [Cirq](https://github.com/quantumlib/Cirq)
-- [NumPy](https://numpy.org)
-- [SymPy](https://www.sympy.org)
-- 🧠 Human intuition meets quantum machine learning
-
----
-
-##  License
-
-MIT License. Use, fork, remix freely — especially for anything quantum and beautiful.
